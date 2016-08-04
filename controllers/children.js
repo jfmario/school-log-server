@@ -82,8 +82,13 @@ router.put ( '/:id', function ( req, res, next )
         if ( req.body.grade != undefined ) child.grade = req.body.grade;
         if ( req.body.name ) child.name = req.body.name;
 
-        child.save ();
-        res.status ( 204 ).json ( child );
+        child.save ( function ( err )
+        {
+
+            if ( err ) return next ( err );
+
+            res.status ( 204 ).json ( child );
+        });
     });
 });
 // DELETE to /children/:id deletes a child
