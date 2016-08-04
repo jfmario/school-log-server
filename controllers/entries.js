@@ -65,9 +65,9 @@ router.post ( '/query', function ( req, res, next )
     {
         queryObj.hours = {};
         if ( req.body.hoursMin != undefined )
-            queryObj.hours.$gte = req.body.hoursMin.toDate ();
+            queryObj.hours.$gte = req.body.hoursMin
         if ( req.body.hoursMax != undefined )
-            queryObj.hours.$lte = req.body.hoursMax.toDate ();
+            queryObj.hours.$lte = req.body.hoursMax
     }
     if ( req.body.subject ) queryObj.subject = req.body.subject;
 
