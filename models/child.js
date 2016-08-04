@@ -10,4 +10,4 @@ var child = db.Schema ({
     name: { type: String, required: true },
     user: { type: String, required: true }
 }, { collection: 'schoollog_children', strict: false } );
-module.exports - db.model ( 'Child', child );
+module.exports = db.model ( 'Child', child );
