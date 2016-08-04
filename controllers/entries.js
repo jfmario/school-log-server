@@ -105,3 +105,16 @@ router.put ( '/:id', function ( req, res, next )
     });
 });
 // DELETE to /entries/:id deletes an entry
+router.delete ( '/:id', function ( req, res, next )
+{
+    if ( !req.headers ['x-auth'] ) return res.send ( 401 );
+    var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
+    Entry.findOneAndRemove ( { _id: req.params.id, user: auth.username },
+        function ( err, entry )
+    {
+
+        if ( err ) return next ( err );
+
+        return res.status ( 200 ).json ( entry );
+    });
+});

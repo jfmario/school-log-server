@@ -96,7 +96,8 @@ router.delete ( '/:id', function ( req, res, next )
 {
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
-    Child.findOneAndRemove ( { _id: req.params.id }, function ( err, child )
+    Child.findOneAndRemove ( { _id: req.params.id, user: auth.username },
+        function ( err, child )
     {
 
         if ( err ) return next ( err );
