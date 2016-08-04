@@ -55,8 +55,8 @@ router.post ( '/', function ( req, res, next )
             name: req.body.name,
             user: auth.username
         };
-        if ( req.body.age ) childObj.age = req.body.age;
-        if ( req.body.grade ) childObj.grade = req.body.grade;
+        if ( req.body.age != undefined ) childObj.age = req.body.age;
+        if ( req.body.grade != undefined ) childObj.grade = req.body.grade;
         var child = new Child ( childObj );
 
         child.save ();
@@ -73,8 +73,8 @@ router.put ( '/:id', function ( req, res, next )
     {
 
         if ( err ) return next ( err );
-        if ( req.body.age ) child.age = req.body.age;
-        if ( req.body.grade ) child.grade = req.body.grade;
+        if ( req.body.age != undefined ) child.age = req.body.age;
+        if ( req.body.grade != undefined ) child.grade = req.body.grade;
         if ( req.body.name ) child.name = req.body.name;
 
         child.save ();

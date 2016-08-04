@@ -10,4 +10,5 @@ var child = db.Schema ({
     name: { type: String, required: true },
     user: { type: String, required: true }
 }, { collection: 'schoollog_children', strict: false } );
+child.index ( { name: 1, user: 1 }, { unique: true } );
 module.exports = db.model ( 'Child', child );

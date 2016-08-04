@@ -8,7 +8,7 @@ var entry = db.Schema ({
     child: { type: String },
     date: { default: Date.now, type: Date },
     description: { type: String },
-    hours: { type: Number },
+    hours: { default: .5, type: Number },
     subject: { type: String },
     user: { type: String }
 }, { collection: 'schoollog_entries', strict: false } );
