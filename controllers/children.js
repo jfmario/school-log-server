@@ -59,8 +59,13 @@ router.post ( '/', function ( req, res, next )
         if ( req.body.grade != undefined ) childObj.grade = req.body.grade;
         var child = new Child ( childObj );
 
-        child.save ();
-        res.status ( 201 ).json ( child );
+        child.save ( function ( err )
+        {
+
+            if ( err ) return next ( err );
+
+            res.status ( 201 ).json ( child );
+        });
     });
 });
 // PUT to /children/:id updates a child
