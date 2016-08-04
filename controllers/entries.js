@@ -50,7 +50,7 @@ router.post ( '/query', function ( req, res, next )
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
 
-    var queryObj - { user: auth.username };
+    var queryObj = { user: auth.username };
     if ( req.body.child ) queryObj.child = req.body.child;
 
     if ( req.body.dateMin || req.body.dateMax )
