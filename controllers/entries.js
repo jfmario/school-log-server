@@ -15,7 +15,7 @@ router.post ( '/', function ( req, res, next )
 
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
-    if ( !req.body.child ) return res.send ( 400 );
+    if ( !req.body.children ) return res.send ( 400 );
     if ( !req.body.description ) return res.send ( 400 );
     if ( !req.body.subject ) return res.send ( 400 );
 
@@ -25,7 +25,7 @@ router.post ( '/', function ( req, res, next )
         if ( err ) return next ( err );
 
         var entryObj = {
-            child: req.body.child,
+            children: req.body.children,
             description: req.body.description,
             subject: req.body.subject,
             user: auth.username
@@ -51,7 +51,7 @@ router.post ( '/query', function ( req, res, next )
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
 
     var queryObj = { user: auth.username };
-    if ( req.body.child ) queryObj.child = req.body.child;
+    if ( req.body.children ) queryObj.children = { $all: req.body.children };
 
     if ( req.body.dateMin || req.body.dateMax )
     {

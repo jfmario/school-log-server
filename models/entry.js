@@ -5,7 +5,8 @@
 
 var db = require ( '../../global/db' );
 var entry = db.Schema ({
-    child: { type: String, required: true },
+    child: { type: String },
+    children: [String],
     date: { default: Date.now, type: Date },
     description: { type: String, required: true },
     hours: { default: .5, type: Number },
