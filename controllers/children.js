@@ -16,7 +16,9 @@ router.get ( '/', function ( req, res, next )
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
 
-    Child.find ( { user: auth.username }, function ( err, children )
+    var query = { $query: { user: auth.username }, $orderby: { 'age': -1 } };
+
+    Child.find ( query, function ( err, children )
     {
 
         if ( err ) return next ( err );
