@@ -51,7 +51,7 @@ router.post ( '/query', function ( req, res, next )
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
 
     var queryObj = { user: auth.username };
-    if ( req.body.children ) queryObj.children = { $all: req.body.children };
+    if ( req.body.children ) queryObj.children = { $in: req.body.children };
 
     if ( req.body.dateMin || req.body.dateMax )
     {
