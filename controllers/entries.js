@@ -69,6 +69,7 @@ router.post ( '/query', function ( req, res, next )
             queryObj.hours.$lte = req.body.hoursMax
     }
     if ( req.body.subject ) queryObj.subject = { $in: req.body.subject };
+    console.log ( queryObj );
 
     Entry.find ( queryObj, function ( err, entries )
     {
