@@ -56,16 +56,16 @@ router.post ( '/query', function ( req, res, next )
     if ( req.body.dateMin || req.body.dateMax )
     {
         queryObj.date = {};
-        if ( req.body.dateMin ) queryObj.date.$gte = req.body.dateMin.toDate ();
-        if ( req.body.dateMax ) queryObj.date.$lte = req.body.dateMax.toDate ();
+        if ( req.body.dateMin != null ) queryObj.date.$gte = req.body.dateMin.toDate ();
+        if ( req.body.dateMax != null ) queryObj.date.$lte = req.body.dateMax.toDate ();
     }
-    if ( ( req.body.hoursMin != undefined ) ||
-        ( req.body.hoursMax != undefined ) )
+    if ( ( req.body.hoursMin != 0 ) ||
+        ( req.body.hoursMax != 0 ) )
     {
         queryObj.hours = {};
-        if ( req.body.hoursMin != undefined )
+        if ( req.body.hoursMin != 0 )
             queryObj.hours.$gte = req.body.hoursMin
-        if ( req.body.hoursMax != undefined )
+        if ( req.body.hoursMax != 0 )
             queryObj.hours.$lte = req.body.hoursMax
     }
     if ( req.body.subject ) queryObj.subject = { $in: req.body.subject };
