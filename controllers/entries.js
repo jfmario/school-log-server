@@ -61,8 +61,7 @@ router.post ( '/query', function ( req, res, next )
     }
     if ( req.body.description )
     {
-        queryObj.description = {};
-        queryObj.description.$text = { $search: req.body.description }
+        queryObj.$text = { $search: req.body.description };
     }
     if ( ( req.body.hoursMin != undefined ) ||
         ( req.body.hoursMax != undefined ) )
