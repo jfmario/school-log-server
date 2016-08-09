@@ -59,7 +59,11 @@ router.post ( '/query', function ( req, res, next )
         if ( req.body.dateMin ) queryObj.date.$gte = req.body.dateMin.toDate ();
         if ( req.body.dateMax ) queryObj.date.$lte = req.body.dateMax.toDate ();
     }
-    if ( req.body.description ) queryObj.description = req.body.description;
+    if ( req.body.description )
+    {
+        queryObj.description = {};
+        queryObj.description.$text = { $search: req.body.description }
+    }
     if ( ( req.body.hoursMin != undefined ) ||
         ( req.body.hoursMax != undefined ) )
     {
@@ -69,7 +73,7 @@ router.post ( '/query', function ( req, res, next )
         if ( req.body.hoursMax != undefined )
             queryObj.hours.$lte = req.body.hoursMax
     }
-    if ( req.body.subject ) queryObj.subject = req.body.subject;
+    if ( req.body.subject ) queryObj.subject = { $in: req.body.subject };
 
     Entry.find ( queryObj, function ( err, entries )
     {
