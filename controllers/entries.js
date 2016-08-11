@@ -56,8 +56,8 @@ router.post ( '/query', function ( req, res, next )
     if ( req.body.dateMin || req.body.dateMax )
     {
         queryObj.date = {};
-        if ( req.body.dateMin ) queryObj.date.$gte = req.body.dateMin.toDate ();
-        if ( req.body.dateMax ) queryObj.date.$lte = req.body.dateMax.toDate ();
+        if ( req.body.dateMin ) queryObj.date.$gte = req.body.dateMin;
+        if ( req.body.dateMax ) queryObj.date.$lte = req.body.dateMax;
     }
     if ( req.body.description ) queryObj.description = req.body.description;
     if ( ( req.body.hoursMin != undefined ) ||
