@@ -51,7 +51,8 @@ router.post ( '/query', function ( req, res, next )
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
 
     var queryObj = { user: auth.username };
-    if ( req.body.children ) queryObj.children = { $in: req.body.children };
+    if ( req.body.children.length > 0 )
+        queryObj.children = { $in: req.body.children };
 
     if ( req.body.dateMin || req.body.dateMax )
     {
@@ -59,17 +60,18 @@ router.post ( '/query', function ( req, res, next )
         if ( req.body.dateMin ) queryObj.date.$gte = req.body.dateMin;
         if ( req.body.dateMax ) queryObj.date.$lte = req.body.dateMax;
     }
-    if ( req.body.description ) queryObj.description = req.body.description;
-    if ( ( req.body.hoursMin != undefined ) ||
-        ( req.body.hoursMax != undefined ) )
+    if ( ( req.body.hoursMin != 0 ) ||
+        ( req.body.hoursMax != 0 ) )
     {
         queryObj.hours = {};
-        if ( req.body.hoursMin != undefined )
+        if ( req.body.hoursMin != 0 )
             queryObj.hours.$gte = req.body.hoursMin
-        if ( req.body.hoursMax != undefined )
+        if ( req.body.hoursMax != 0 )
             queryObj.hours.$lte = req.body.hoursMax
     }
-    if ( req.body.subject ) queryObj.subject = req.body.subject;
+    if ( req.body.subject.length )
+        queryObj.subject = { $in: req.body.subject };
+    console.log ( queryObj );
 
     Entry.find ( queryObj, function ( err, entries )
     {
