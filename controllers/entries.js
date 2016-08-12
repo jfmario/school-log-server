@@ -6,6 +6,7 @@
 var jwt = require ( 'jwt-simple' );
 var router = require ( 'express' ).Router ();
 var authSettings = require ( '../../auth/settings' );
+var queryHelper = require ( '../lib/query' );
 var User = require ( '../../auth/models/user' );
 var Entry = require ( '../models/entry' );
 
@@ -50,34 +51,14 @@ router.post ( '/query', function ( req, res, next )
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
 
-    var queryObj = { user: auth.username };
-    if ( req.body.children.length > 0 )
-        queryObj.children = { $in: req.body.children };
-
-    if ( req.body.dateMin || req.body.dateMax )
-    {
-        queryObj.date = {};
-        if ( req.body.dateMin ) queryObj.date.$gte = req.body.dateMin;
-        if ( req.body.dateMax ) queryObj.date.$lte = req.body.dateMax;
-    }
-    if ( ( req.body.hoursMin != 0 ) ||
-        ( req.body.hoursMax != 0 ) )
-    {
-        queryObj.hours = {};
-        if ( req.body.hoursMin != 0 )
-            queryObj.hours.$gte = req.body.hoursMin
-        if ( req.body.hoursMax != 0 )
-            queryObj.hours.$lte = req.body.hoursMax
-    }
-    if ( req.body.subject.length )
-        queryObj.subject = { $in: req.body.subject };
+    var queryObj = queryHelper.queryEntries ( auth, req );
 
     Entry.find ( queryObj, null, { sort: { 'date': 1 } },
         function ( err, entries )
         {
-    
+
             if ( err ) return next ( err );
-    
+
             res.json ( entries );
         });
 });
