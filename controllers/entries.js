@@ -71,15 +71,15 @@ router.post ( '/query', function ( req, res, next )
     }
     if ( req.body.subject.length )
         queryObj.subject = { $in: req.body.subject };
-    console.log ( queryObj );
 
-    Entry.find ( queryObj, function ( err, entries )
-    {
-
-        if ( err ) return next ( err );
-
-        res.json ( entries );
-    });
+    Entry.find ( { $query: queryObj, $orderby: { 'date': 1 } },
+        function ( err, entries )
+        {
+    
+            if ( err ) return next ( err );
+    
+            res.json ( entries );
+        });
 });
 // PUT to /entries/:id updates an entry
 router.put ( '/:id', function ( req, res, next )
