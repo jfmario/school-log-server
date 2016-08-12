@@ -72,7 +72,7 @@ router.post ( '/query', function ( req, res, next )
     if ( req.body.subject.length )
         queryObj.subject = { $in: req.body.subject };
 
-    Entry.find ( { $query: queryObj, $orderby: { 'date': 1 } },
+    Entry.find ( queryObj, null, { sort: { 'date': 1 } },
         function ( err, entries )
         {
     
