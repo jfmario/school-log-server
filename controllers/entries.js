@@ -63,8 +63,8 @@ router.post ( '/query', function ( req, res, next )
             res.json ( entries );
         });
 });
-// POST to /entries/csv gets a csv matching the query
-router.post ( '/csv', function ( req, res, next )
+// POST to /entries/entrylog.csv gets a csv matching the query
+router.post ( '/entrylog.csv', function ( req, res, next )
 {
 
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
