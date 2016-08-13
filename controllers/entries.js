@@ -5,6 +5,7 @@
 
 var jwt = require ( 'jwt-simple' );
 var router = require ( 'express' ).Router ();
+var moment = require ( 'moment' );
 var authSettings = require ( '../../auth/settings' );
 var queryHelper = require ( '../lib/query' );
 var User = require ( '../../auth/models/user' );
@@ -60,6 +61,49 @@ router.post ( '/query', function ( req, res, next )
             if ( err ) return next ( err );
 
             res.json ( entries );
+        });
+});
+// POST to /entries/csv gets a csv matching the query
+router.post ( '/csv', function ( req, res, next )
+{
+
+    if ( !req.headers ['x-auth'] ) return res.send ( 401 );
+    var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
+
+    var queryObj = queryHelper.queryEntries ( auth, req );
+
+    Entry.find ( queryObj, null, { sort: { 'date': 1 } },
+        function ( err, entries )
+        {
+
+            if ( err ) return next ( err );
+
+            var flattenedEntries = [];
+            var csvLines = ['Date,Student,Subject,Hours,Description']
+
+            var childrenQuery = ( req.body.children.length > 0 );
+
+            for ( var i = 0; i < entries.length; ++i )
+            {
+                for ( var j = 0; j < entries [i].children.length; ++j )
+                {
+                    if ( ( ( childrenQuery ) &&
+                        ( req.body.children.indexOf (
+                        entries [i].children [j] ) != -1 ) ) || !childrenQuery )
+                    {
+
+                        var dateStr = moment ( entries [i].date ).format (
+                            'MM/DD/YYYY' );
+                        var line = dateStr + ',' + entries [i].children [j] +
+                            ',' + entries [i].subject + ',' +
+                            entries [i].hours + ',' + entries [i].description;
+
+                        csvLines.push ( line );
+                    }
+                }
+            }
+
+            res.send ( csvLines.join ( '\n' ) );
         });
 });
 // PUT to /entries/:id updates an entry
