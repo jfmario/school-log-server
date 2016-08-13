@@ -4,6 +4,7 @@
  */
 
 var jwt = require ( 'jwt-simple' );
+var logger = require ( '../../global/logger' );
 var router = require ( 'express' ).Router ();
 var authSettings = require ( '../../auth/settings' );
 var User = require ( '../../auth/models/user' );
@@ -13,6 +14,7 @@ var Child = require ( '../models/child' );
 router.get ( '/', function ( req, res, next )
 {
 
+    logger.trace ( "GET to /school-log/children from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
 
@@ -23,12 +25,15 @@ router.get ( '/', function ( req, res, next )
 
         if ( err ) return next ( err );
 
+        logger.info ( "User " + auth.username + "has " +
+            children.length + " students" );
         res.json ( children );
     });
 });
 // GET to /children/:id returns a single child
 router.get ( '/:id', function ( req, res, next )
 {
+    logger.trace ( "GET to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
     Child.findOne ( { _id: req.params.id, user: auth.username },
@@ -37,6 +42,8 @@ router.get ( '/:id', function ( req, res, next )
 
         if ( err ) return next ( err );
 
+        logger.info ( "User " + auth.username + "gets info on " +
+            child.name );
         res.json ( child );
     });
 });
@@ -44,6 +51,7 @@ router.get ( '/:id', function ( req, res, next )
 router.post ( '/', function ( req, res, next )
 {
 
+    logger.trace ( "POST to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
     if ( !req.body.name ) return res.send ( 400 );
@@ -66,6 +74,8 @@ router.post ( '/', function ( req, res, next )
 
             if ( err ) return next ( err );
 
+            logger.info ( "User " + auth.username + " creates new student: " +
+                child.name );
             res.status ( 201 ).json ( child );
         });
     });
@@ -73,6 +83,7 @@ router.post ( '/', function ( req, res, next )
 // PUT to /children/:id updates a child
 router.put ( '/:id', function ( req, res, next )
 {
+    logger.trace ( "PUT to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
     Child.findOne ( { _id: req.params.id, user: auth.username },
@@ -89,6 +100,8 @@ router.put ( '/:id', function ( req, res, next )
 
             if ( err ) return next ( err );
 
+            logger.info ( "User " + auth.username + " updates student: " +
+                child.name );
             res.status ( 204 ).json ( child );
         });
     });
@@ -96,6 +109,7 @@ router.put ( '/:id', function ( req, res, next )
 // DELETE to /children/:id deletes a child
 router.delete ( '/:id', function ( req, res, next )
 {
+    logger.trace ( "DELETE to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
     Child.findOneAndRemove ( { _id: req.params.id, user: auth.username },
@@ -104,6 +118,8 @@ router.delete ( '/:id', function ( req, res, next )
 
         if ( err ) return next ( err );
 
+        logger.info ( "User " + auth.username + " deletes student: " +
+            child.name );
         return res.status ( 200 ).json ( child );
     });
 });

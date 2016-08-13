@@ -4,6 +4,7 @@
  */
 
 var jwt = require ( 'jwt-simple' );
+var logger = require ( '../../global/logger' );
 var router = require ( 'express' ).Router ();
 var moment = require ( 'moment' );
 var authSettings = require ( '../../auth/settings' );
@@ -15,6 +16,7 @@ var Entry = require ( '../models/entry' );
 router.post ( '/', function ( req, res, next )
 {
 
+    logger.trace ( "POST to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
     if ( !req.body.children ) return res.send ( 400 );
@@ -41,6 +43,8 @@ router.post ( '/', function ( req, res, next )
 
             if ( err ) return next ( err );
 
+            logger.info ( "User " + auth.username +
+                " creates new entry in subject " + entry.subject );
             res.status ( 201 ).json ( entry );
         });
     });
@@ -49,6 +53,7 @@ router.post ( '/', function ( req, res, next )
 router.post ( '/query', function ( req, res, next )
 {
 
+    logger.trace ( "POST to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
 
@@ -60,6 +65,8 @@ router.post ( '/query', function ( req, res, next )
 
             if ( err ) return next ( err );
 
+            logger.info ( "User " + auth.username +
+                " queries " + entries.length + " entries" );
             res.json ( entries );
         });
 });
@@ -67,6 +74,7 @@ router.post ( '/query', function ( req, res, next )
 router.post ( '/entrylog.csv', function ( req, res, next )
 {
 
+    logger.trace ( "POST to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
 
@@ -103,12 +111,15 @@ router.post ( '/entrylog.csv', function ( req, res, next )
                 }
             }
 
+            logger.info ( "User " + auth.username +
+                " pulls a CSV with " + entries.length + " entries" );
             res.send ( csvLines.join ( '\n' ) );
         });
 });
 // PUT to /entries/:id updates an entry
 router.put ( '/:id', function ( req, res, next )
 {
+    logger.trace ( "PUT to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
     Entry.findOne ( { _id: req.params.id, user: auth.username },
@@ -127,6 +138,8 @@ router.put ( '/:id', function ( req, res, next )
 
             if ( err ) return next ( err );
 
+            logger.info ( "User " + auth.username +
+                " updates an entry in subject " + entry.subject );
             res.status ( 204 ).json ( entry );
         });
     });
@@ -134,6 +147,7 @@ router.put ( '/:id', function ( req, res, next )
 // DELETE to /entries/:id deletes an entry
 router.delete ( '/:id', function ( req, res, next )
 {
+    logger.trace ( "DELETE to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
     var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
     Entry.findOneAndRemove ( { _id: req.params.id, user: auth.username },
@@ -142,6 +156,8 @@ router.delete ( '/:id', function ( req, res, next )
 
         if ( err ) return next ( err );
 
+        logger.info ( "User " + auth.username +
+            " deletes an entry in subject " + entry.subject );
         return res.status ( 200 ).json ( entry );
     });
 });
