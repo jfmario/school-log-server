@@ -121,7 +121,7 @@ router.put ( '/:id', function ( req, res, next )
 {
     logger.trace ( "PUT to " + req.path + " from " + req.ip );
     if ( !req.headers ['x-auth'] ) return res.send ( 401 );
-    var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key
+    var auth = jwt.decode ( req.headers ['x-auth'], authSettings.key );
     logger.debug ( "Search for entry " + req.params.id +
         " in SchoolLog database" );
     Entry.findOne ( { _id: req.params.id, user: auth.username },
