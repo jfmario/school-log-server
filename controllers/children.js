@@ -116,7 +116,11 @@ router.delete ( '/:id', function ( req, res, next )
         function ( err, child )
     {
 
-        if ( err ) return next ( err );
+        if ( err )
+        {
+            logger.error ( err );
+            return next ( err );
+        }
 
         logger.info ( "User " + auth.username + " deletes student: " +
             child.name );
