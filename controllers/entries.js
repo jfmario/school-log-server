@@ -130,7 +130,7 @@ router.put ( '/:id', function ( req, res, next )
 
         if ( err ) return next ( err );
         logger.debug ( "Found entry " + entry._id + " in SchoolLog database" );
-        if ( req.body.child ) entry.child = req.body.child;
+        if ( req.body.children ) entry.children = req.body.children;
         if ( req.body.date ) entry.date = moment ( req.body.date )
         if ( req.body.description ) entry.description = req.body.description;
         if ( req.body.hours ) entry.hours = req.body.hours;
