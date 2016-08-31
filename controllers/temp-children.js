@@ -1,4 +1,5 @@
 
+var router = require ( 'express' ).Router ();
 var logger = require ( '../../global/logger' );
 var apigen = require ( '../../global/lib/apigen' );
 var authFunction = require ( '../../auth/lib/auth-function')
@@ -10,6 +11,7 @@ module.exports = apigen ({
     endpoint: '/children',
     nameField: 'name',
     objectName: 'Student',
+    router: router,
     options: {
         GETALL: {
             requiresAuthentication: true,
